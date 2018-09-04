@@ -78,7 +78,7 @@ print(centroids)
 So we could now visualize which points is each, and understand what each value of the Matrix D means.  
 D is a ```3x5``` matrix. Each row represent each of the red points and each column represent each of the blue points.  
 Therefore, each cell correpond to the distance between that pair of red-blue points
-<img src='images/globalpicture.png' style='width:55%; float:left'>
+<img src='../images/globalpicture.png' style='width:55%; float:left'>
 
 #### Assigning points
 We are trying to answer the question:  
@@ -142,4 +142,4 @@ print(list(zip(rows, cols)))
 
 
 If we look at the pairs then ```(2,4)```, ```(1,1)```, ```(0,0)``` in D matrix (below) we can see they are the three min points sorted:  
-<img src='images/distances.png' style='width:70%; float:left'>
+<img src='../images/distances.png' style='width:70%; float:left'>
