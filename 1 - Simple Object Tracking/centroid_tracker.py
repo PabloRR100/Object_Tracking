@@ -154,24 +154,4 @@ class CentroidTracker(object):
                     
         return self.objects
                 
-            
-        
-import matplotlib.pyplot as plt
-                    
-np.random.seed(42)
-objectCentroids = np.random.uniform(size=(2,2)) * 10
-centroids = np.random.uniform(size=(3,2)) * 10
-        
-        
-plt.figure()
-plt.scatter(*zip(*objectCentroids), c='r')
-plt.scatter(*zip(*centroids), c='b')
-plt.show()
-        
-
-D = dist.cdist(objectCentroids, centroids)
-D.min(axis=1)
-rows = D.min(axis=1).argsort()
-cols = D.argmin(axis=1)[rows]
-
-
+    
