@@ -22,14 +22,12 @@ class CentroidTracker(object):
         self.maxDisappeared = maxDisappeared
         
         
-    def centroid_(x0,y0,x1,y1):
+    def centroid_(self, x0,y0,x1,y1):
         '''
         * Functionality:
             Calculate the centroid coordinate of a given rectangle
         '''
-        cx = int((x0+x1) / 2.0)
-        cy = int((y0+y1) / 2.0)
-        return tuple(cx,cy)
+        return int((x0+x1) / 2.0), int((y0+y1) / 2.0)
         
     
     def register(self, centroid):
@@ -84,7 +82,6 @@ class CentroidTracker(object):
         # Loop over the rectangles to calculate each centroid
         for (i, (x0,y0,xf,yf)) in enumerate(rects):
             inputCentroids[i] = self.centroid_(x0,y0,xf,yf)
-            
         
         # 3 - Register new objetcs
         
@@ -104,7 +101,8 @@ class CentroidTracker(object):
             # Calculate distance of each pair of objects and input centroids
             D = dist.cdist(np.array(objectCentroids), inputCentroids)
             
-            # 4.2 Match pairs of minimum distances
+            # 4.2 Match pairs of minimum distances 
+            # Explained in http://www.github/PabloRR100/
             
             # Sort the smallest distances 
             rows = D.min(axis=1).argsort() ## TODO: understand argsort 
@@ -130,14 +128,15 @@ class CentroidTracker(object):
                 
             # Cases we haven't examined yet
             unusedRows = set(range(D.shape[0])).difference(usedRows)
-            unusedCols = set(range(D.shape[0])).difference(usedCols)
+            unusedCols = set(range(D.shape[1])).difference(usedCols)
             
-            # 5 - Verify if the extra object centroids have disappeared
+            # 5 - Verify if the extra detected object centroids have potentially disappeared
             
             if D.shape[0] >= D.shape[1]:
                 
                 for row in unusedRows:
                     
+                    # Increment the disappeared time for that object ID
                     objectID = objectIDs[row]
                     self.disappeared[objectID] += 1
                     
@@ -148,7 +147,6 @@ class CentroidTracker(object):
             # 6 - Otherwise, it means we have new inputs to register
             
             else:
-                
                 for col in unusedCols:
                     self.register(inputCentroids[col])
                     
