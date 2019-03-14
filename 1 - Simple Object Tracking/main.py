@@ -8,7 +8,7 @@ from imutils.video import VideoStream
 
 from centroid_tracker import CentroidTracker
 
-print(cv2.__version__)
+# print(cv2.__version__)
 
 
 # CONFIGURATION 
@@ -39,14 +39,19 @@ H, W = None, None
 
 print('Loading Model...')
 net = cv2.dnn.readNetFromCaffe(args['prototxt'], args['model'])
-# net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'res10_300x300_ssd_iter_140000.caffemodel')
 
 
 # VIDEO CAPTURE
 
-print('Opening webcam... ')
+print('Opening webcam...')
 video = VideoStream(src=0).start()
+
 time.sleep(2.0)
+# h,w = video.resolution
+h,w = (225, 400)
+print('Start recording...')
+fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+cam = cv2.VideoWriter('output.mov',fourcc, 20.0, (h,w))
 
 while True:
     
@@ -56,7 +61,7 @@ while True:
     
     # 1.2 - Grap frame dimensions
     if W is None or H is None: (H,W) = frame.shape[:2]
-
+    
     # 1.3 - Preprocessing the image - create a blob
     blob = cv2.dnn.blobFromImage(frame, 1.0, (W,H), (104., 177., 123.))
     
@@ -98,12 +103,14 @@ while True:
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 2)
         
     # 4 - Show output frame and wait to quit
+    cam.write(frame)
     cv2.imshow('Frame', frame)   
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"): break
         
-cv2.destroyAllWindows()
+cam.release()
 video.stop()
+cv2.destroyAllWindows()
            
 print('Exited')     
     
