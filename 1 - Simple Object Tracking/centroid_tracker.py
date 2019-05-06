@@ -102,10 +102,9 @@ class CentroidTracker(object):
             D = dist.cdist(np.array(objectCentroids), inputCentroids)
             
             # 4.2 Match pairs of minimum distances 
-            # Explained in http://www.github/PabloRR100/
-            
+            # Explained in CentroidDistancesCalculations.md
             # Sort the smallest distances 
-            rows = D.min(axis=1).argsort() ## TODO: understand argsort 
+            rows = D.min(axis=1).argsort()
             cols = D.argmin(axis=1)[rows]
             
             # Use the distances to associate objectsID
@@ -114,7 +113,7 @@ class CentroidTracker(object):
             
             for (row,col) in zip(rows,cols):
                 
-                # Ignore if we hace already examined
+                # Ignore if we have already examined
                 if row in usedRows or col in usedCols: continue
             
                 # Otherwise
