@@ -7,7 +7,6 @@ from scipy.spatial import distance as dist
 #remembers the order entries were added
 
 
-
 class CentroidTracker(object):
     
     def __init__(self, maxDisappeared=50):
@@ -15,7 +14,6 @@ class CentroidTracker(object):
         * maxDisappeared:
             max nº of frames lost until deregister
         '''
-        
         self.nextObjectID = 0
         self.objects = OrderedDict()
         self.disappeared = OrderedDict()
