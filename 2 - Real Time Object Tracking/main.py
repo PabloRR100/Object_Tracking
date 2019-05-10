@@ -125,16 +125,16 @@ while True:
 	# If 's' --> we are going to "select" a BB to track
 	if key == ord("s"):
         
-		# ENTER or SPACE after selecting the ROI)
-		initBB = cv2.selectROI("Frame", frame, fromCenter=False,
-			showCrosshair=True)
+		# ENTER or SPACE after selecting the ROI
+		initBB = cv2.selectROI("Frame", frame, fromCenter=False, showCrosshair=True)
 
-		# start OpenCV object tracker using the supplied bounding box
-		# coordinates, then start the FPS throughput estimator as well
+		# Start OpenCV object tracker using the supplied bounding box
 		tracker.init(frame, initBB)
+        
+        # Start the FPS throughput estimator as well
 		fps = FPS().start()
 
-	# if the `q` key was pressed, break from the loop
+	# If `q` key --> Exit program
 	elif key == ord("q"):
 		break
 
