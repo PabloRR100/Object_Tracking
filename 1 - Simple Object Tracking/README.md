@@ -1,6 +1,7 @@
 
 # Centroid Tracking Algorithm
 
+TODO: Add Video Demo
 
 THIS POST IS BASED ON [ADRIEN ROSEBROOK SITE][REF]
 
