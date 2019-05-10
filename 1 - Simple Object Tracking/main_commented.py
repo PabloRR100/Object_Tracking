@@ -59,7 +59,7 @@ time.sleep(2.0)
 h,w = (225, 400)
 print('Start recording...')
 fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-cam = cv2.VideoWriter('output.mov',fourcc, 20.0, (h,w))
+cam = cv2.VideoWriter('output.mp4',fourcc, 20.0, (h,w))
 
 while True:
     

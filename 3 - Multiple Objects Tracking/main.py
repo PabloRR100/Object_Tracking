@@ -10,7 +10,6 @@ import cv2
 import time
 import imutils
 from imutils.video import VideoStream
-from imutils.video import FPS
 
 '''
 OpenCV already comes with many prebuilt object trackers we are going to explore
@@ -41,7 +40,8 @@ OPENCV_OBJECT_TRACKERS = {
 		"mosse": cv2.TrackerMOSSE_create
 	}
 
-tracker = OPENCV_OBJECT_TRACKERS[args["tracker"]]()
+# OpenCV Multi Object Tracker
+trackers = cv2.MultiTracker_create()
 
 
 # =================
@@ -81,39 +81,19 @@ while True:
 	## PREPOCESSING
     
     # Resize
-	frame = imutils.resize(frame, width=500)
-	(H, W) = frame.shape[:2]
+	frame = imutils.resize(frame, width=600)
+#	(H, W) = frame.shape[:2]
 
-	# check to see if we are currently tracking an object
-	if initBB is not None:
+	# We DONT have the initBB here we are not going to select anything
+    
+	# Trackers return the detection status and a BB if succeded
+	(detected, box) = trackers.update(frame)
+    
+	## CASE THERE WAS A DETECTION
+	if detected:
         
-		# Tracker return the detection status and a BB if succeded
-		(detected, box) = tracker.update(frame)
-
-		## CASE THERE WAS A DETECTION
-		if detected:
-            
-			(x, y, w, h) = [int(v) for v in box]
-			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-		# Update the FPS counter
-		fps.update()
-		fps.stop()
-
-        ## INFORMATION 
-        
-		# Collect Information
-		info = [
-			("Tracker", args["tracker"]),
-			("Success", "Yes" if detected else "No"),
-			("FPS", "{:.2f}".format(fps.fps())),
-		]
-
-		# Draw Information
-		for (i, (k, v)) in enumerate(info):
-			text = "{}: {}".format(k, v)
-			cv2.putText(frame, text, (10, H - ((i * 20) + 20)),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+		(x, y, w, h) = [int(v) for v in box]
+		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
 	# Show the output frame
 	cv2.imshow("Frame", frame)
@@ -126,14 +106,11 @@ while True:
 	if key == ord("s"):
         
 		# ENTER or SPACE after selecting the ROI
-		initBB = cv2.selectROI("Frame", frame, fromCenter=False, showCrosshair=True)
+		box = cv2.selectROI("Frame", frame, fromCenter=False, showCrosshair=True)
 
-		# Start OpenCV object tracker using the supplied bounding box
-		tracker.init(frame, initBB)
+        # Create a new tracker for the BB and add it to our multi-object tracker
+		trackers.add(OPENCV_OBJECT_TRACKERS[args["tracker"]](), frame, box)
         
-        # Start the FPS throughput estimator as well
-		fps = FPS().start()
-
 	# If `q` key --> Exit program
 	elif key == ord("q"):
 		break
